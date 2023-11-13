@@ -11,11 +11,13 @@ using namespace pros;
 	Motor backRight(7);
 	Motor rightCatapult(10, E_MOTOR_GEAR_RED, true);
 	Motor leftCatapult(9, E_MOTOR_GEAR_RED);
-	ADIDigitalIn stopperButton('A');
+	//ADIDigitalIn stopperButton('A');
 	Motor_Group cataGroup({rightCatapult, leftCatapult});
-	
-
+    pros::Rotation rotationSensor(2,true);
+	ADIDigitalOut SolenoidR('A');
+	ADIDigitalOut SolenoidL('B');
 	// int speed = 100;
+	
 
 	// int stopperGotPressed = 0;
 /**
@@ -47,6 +49,8 @@ void initialize() {
 	pros::lcd::set_text(1, "Hello PROS User!");
 
 	pros::lcd::register_btn1_cb(on_center_button);
+	SolenoidL.set_value(LOW);
+	SolenoidR.set_value(HIGH);
 	cataGroup.set_brake_modes(MOTOR_BRAKE_HOLD);
 	cataGroup.set_encoder_units(MOTOR_ENCODER_DEGREES);
 	backLeft.set_encoder_units(MOTOR_ENCODER_ROTATIONS);
@@ -55,6 +59,9 @@ void initialize() {
 	middleRight.set_encoder_units(MOTOR_ENCODER_ROTATIONS);
 	frontLeft.set_encoder_units(MOTOR_ENCODER_ROTATIONS);
 	frontRight.set_encoder_units(MOTOR_ENCODER_ROTATIONS);
+	//rotationSensor.set_position(0);
+	//rotationSensor.reset_position();
+	//delay(500);
 	
 }
 
@@ -75,37 +82,33 @@ middleLeft.move_relative(rotations, velocity);
 middleRight.move_relative(rotations, velocity);
 backRight.move_relative(rotations, velocity);
 frontRight.move_relative(rotations, velocity);
-delay((rotations / 2) * 400);
 }
 
 void drivebackwards(int rotations, int velocity) {
-frontLeft.move_relative(-rotations, velocity);
-backLeft.move_relative(-rotations, velocity);
-middleLeft.move_relative(-rotations, velocity);
-middleRight.move_relative(-rotations, velocity);
-backRight.move_relative(-rotations, velocity);
-frontRight.move_relative(-rotations, velocity);
-delay((rotations / 2) * 400);
+frontLeft.move_relative(-rotations, -velocity);
+backLeft.move_relative(-rotations, -velocity);
+middleLeft.move_relative(-rotations, -velocity);
+middleRight.move_relative(-rotations, -velocity);
+backRight.move_relative(-rotations, -velocity);
+frontRight.move_relative(-rotations, -velocity);
 }
 
 void turnleft(int rotations, int velocity) {
-frontLeft.move_relative(-rotations, velocity);
-backLeft.move_relative(-rotations, velocity);
-middleLeft.move_relative(-rotations, velocity);
+frontLeft.move_relative(-rotations, -velocity);
+backLeft.move_relative(-rotations, -velocity);
+middleLeft.move_relative(-rotations, -velocity);
 middleRight.move_relative(rotations, velocity);
 backRight.move_relative(rotations, velocity);
 frontRight.move_relative(rotations, velocity);
-delay((rotations / 2) * 400);
 }
 
 void turnright(int rotations, int velocity) {
 frontLeft.move_relative(rotations, velocity);
 backLeft.move_relative(rotations, velocity);
 middleLeft.move_relative(rotations, velocity);
-middleRight.move_relative(-rotations, velocity);
-backRight.move_relative(-rotations, velocity);
-frontRight.move_relative(-rotations, velocity);
-delay((rotations / 2) * 400);
+middleRight.move_relative(-rotations, -velocity);
+backRight.move_relative(-rotations, -velocity);
+frontRight.move_relative(-rotations, -velocity);
 }
 
 void disabled() {}
@@ -133,19 +136,48 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
-	driveforward(1.1, 200);
-	delay(2000);
-	drivebackwards(1, 40);
+	delay(1000);
+	// JUST PUSH CODE
 	
+	driveforward(1.2, 200);
+	delay(2000);
+	drivebackwards(0.5, 40);
+	delay(200);
+	//SolenoidL.set_value(HIGH);
+	//drivebackwards(0.5, 40);
+	//delay(1500);
+	//turnleft(3, 60);
+	
+	
+
+	// END OF JUST PUSH CODE
+  
+	// NEAR SIDE CODE
 	/*
-	P_cataFire();
-	frontLeft.move_velocity(-5);
-	backLeft.move_velocity(-5);
-	middleLeft.move_velocity(-5);
-	middleRight.move_velocity(-5);
-	backRight.move_velocity(-5);
-	frontRight.move_velocity(-5);
+	driveforward(1, 50);
+	delay(1000);
+	SolenoidL.set_value(HIGH);
+	delay(500);
+	drivebackwards(0.8, 50);
+	delay(1000);
+	turnleft(1.4, 30);
+	delay(1000);
+	drivebackwards(3, 60);
+	delay(1000);
 	*/
+	// END OF NEAR SIDE CODE
+
+	// AUTONOMOUS SKILLS CODE
+/*
+	P_cataFire();
+	frontLeft.move_velocity(-3);
+	backLeft.move_velocity(-3);
+	middleLeft.move_velocity(-3);
+	middleRight.move_velocity(-3);
+	backRight.move_velocity(-3);
+	frontRight.move_velocity(-3);
+*/
+	// END OF AUTONOMOUS SKILLS CODE
 
 /*
 driveforward(1, 80);
@@ -173,7 +205,7 @@ drivebackwards(2, 80);
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
-
+/*
 void catapultfire () {
 	while(true){
 		if (master.get_digital(E_CONTROLLER_DIGITAL_R2)) {
@@ -191,30 +223,61 @@ void catapultfire () {
 		}
 	};
 }
-
-void catapultfiremanual () {
-		if (master.get_digital(E_CONTROLLER_DIGITAL_R2)) {
-			cataGroup.move(80);
-			delay(5);
-			cataGroup.brake();
-		}
-		if (master.get_digital(E_CONTROLLER_DIGITAL_R1)){
-			cataGroup.move(50);
-			delay(5);
+*/
+// void catapultfiremanual () {
+// 		if (master.get_digital(E_CONTROLLER_DIGITAL_R2)) {
+// 			cataGroup.move(80);
+// 			delay(5);
+// 			cataGroup.brake();
+// 		}
+// 		if (master.get_digital(E_CONTROLLER_DIGITAL_R1)){
+// 			cataGroup.move(50);
+// 			delay(5);
+// 			cataGroup.brake();
+// 		}
+// }
+/*
+void catapultfire () {
+		if (rotationSensor.get_position() == 88) {
+			if (master.get_digital(E_CONTROLLER_DIGITAL_R2))
+			{
+				cataGroup.move_velocity(100);
+			}
+		else
 			cataGroup.brake();
 		}
 }
+*/
+
+void rotationalCata() {
+	while (true)
+	{
+		while ((rotationSensor.get_angle() < 7700) || (rotationSensor.get_angle() > 8500))
+		{
+			cataGroup.move(127);
+		}
+		cataGroup.move(0);
+		cataGroup.brake();
+		if (master.get_digital(E_CONTROLLER_DIGITAL_R2))
+		{
+			int motorP = rightCatapult.get_position();
+			int fireM = 20;
+			int grace = 5;
+			cataGroup.move_relative(fireM, 100);
+			while ((rightCatapult.get_position() < motorP + fireM - grace) || (rightCatapult.get_position() > motorP + fireM + grace)){
+				delay(5);
+			}
+			delay(100);
+		}	
+	}
+}
 
 void opcontrol() {
-	//cataGroup.move_relative(88.8 * 3.0, 50);
-		//while (!((rightCatapult.get_position() < 268.4) && (rightCatapult.get_position() > 264.4))){
-		 //	delay(5);
-		//}
-		//rightCatapult.tare_position();
-	
+	SolenoidL.set_value(LOW);
+	SolenoidR.set_value(HIGH);
+	int OCINT = 0;
+	Task fireCatapult(rotationalCata);
 	while(true){
-		
-		catapultfiremanual();
 		int forward_val =  master.get_analog(ANALOG_LEFT_Y);
 		int turn_val =  master.get_analog(ANALOG_RIGHT_X) > 5 || master.get_analog(ANALOG_RIGHT_X) < -5 ? master.get_analog(ANALOG_RIGHT_X) : 0;
 
@@ -228,5 +291,58 @@ void opcontrol() {
 		frontRight = right_motors;
 		middleRight = right_motors;
 		backRight = right_motors;
+
+		if (master.get_digital(E_CONTROLLER_DIGITAL_L2) == 1)
+		{
+			if(OCINT == 0)
+			{
+				SolenoidL.set_value(HIGH);
+				SolenoidR.set_value(LOW);
+				OCINT = 1;
+				delay(500);
+			}
+			else
+			{
+				SolenoidL.set_value(LOW);
+				SolenoidR.set_value(HIGH);
+				OCINT = 0;
+				delay(500);
+			}
+			
+		}
+		if (master.get_digital(E_CONTROLLER_DIGITAL_L1) == 1)
+		{
+			if(OCINT == 0)
+			{
+				SolenoidL.set_value(HIGH);
+				OCINT = 1;
+				delay(500);
+			}
+			else
+			{
+				SolenoidL.set_value(LOW);
+				OCINT = 0;
+				delay(500);
+			}
+		}
+		if (master.get_digital(E_CONTROLLER_DIGITAL_R1) == 1)
+		{
+			if(OCINT == 0)
+			{
+				SolenoidR.set_value(LOW);
+				OCINT = 1;
+				delay(500);
+			}
+			else
+			{
+				SolenoidR.set_value(HIGH);
+				OCINT = 0;
+				delay(500);
+			}
+			
+		}
 	}
+		
+		
+	
 }
