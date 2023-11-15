@@ -94,21 +94,21 @@ frontRight.move_relative(-rotations, -velocity);
 }
 
 void turnleft(int rotations, int velocity) {
-frontLeft.move_relative(-rotations, -velocity);
-backLeft.move_relative(-rotations, -velocity);
-middleLeft.move_relative(-rotations, -velocity);
-middleRight.move_relative(rotations, velocity);
-backRight.move_relative(rotations, velocity);
-frontRight.move_relative(rotations, velocity);
+	frontLeft.move_relative(-rotations, -velocity);
+	backLeft.move_relative(-rotations, -velocity);
+	middleLeft.move_relative(-rotations, -velocity);
+	middleRight.move_relative(rotations, velocity);
+	backRight.move_relative(rotations, velocity);
+	frontRight.move_relative(rotations, velocity);
 }
 
 void turnright(int rotations, int velocity) {
-frontLeft.move_relative(rotations, velocity);
-backLeft.move_relative(rotations, velocity);
-middleLeft.move_relative(rotations, velocity);
-middleRight.move_relative(-rotations, -velocity);
-backRight.move_relative(-rotations, -velocity);
-frontRight.move_relative(-rotations, -velocity);
+	frontLeft.move_relative(rotations, velocity);
+	backLeft.move_relative(rotations, velocity);
+	middleLeft.move_relative(rotations, velocity);
+	middleRight.move_relative(-rotations, -velocity);
+	backRight.move_relative(-rotations, -velocity);
+	frontRight.move_relative(-rotations, -velocity);
 }
 
 void disabled() {}
@@ -272,26 +272,10 @@ void rotationalCata() {
 	}
 }
 
-void opcontrol() {
-	SolenoidL.set_value(LOW);
-	SolenoidR.set_value(HIGH);
+void wingControl(){
 	int OCINT = 0;
-	Task fireCatapult(rotationalCata);
-	while(true){
-		int forward_val =  master.get_analog(ANALOG_LEFT_Y);
-		int turn_val =  master.get_analog(ANALOG_RIGHT_X) > 5 || master.get_analog(ANALOG_RIGHT_X) < -5 ? master.get_analog(ANALOG_RIGHT_X) : 0;
-
-		int right_motors = forward_val - turn_val;
-		int left_motors = forward_val + turn_val;
-
-		frontLeft = left_motors;
-		middleLeft = left_motors;
-		backLeft = left_motors;
-		
-		frontRight = right_motors;
-		middleRight = right_motors;
-		backRight = right_motors;
-
+	while (true)
+	{
 		if (master.get_digital(E_CONTROLLER_DIGITAL_L2) == 1)
 		{
 			if(OCINT == 0)
@@ -341,6 +325,31 @@ void opcontrol() {
 			}
 			
 		}
+	}
+	
+}
+
+void opcontrol() {
+	SolenoidL.set_value(LOW);
+	SolenoidR.set_value(HIGH);
+	Task fireCatapult(rotationalCata);
+	Task MannageWings(wingControl);
+	while(true){
+		int forward_val =  master.get_analog(ANALOG_LEFT_Y);
+		int turn_val =  master.get_analog(ANALOG_RIGHT_X) > 5 || master.get_analog(ANALOG_RIGHT_X) < -5 ? master.get_analog(ANALOG_RIGHT_X) : 0;
+
+		int right_motors = forward_val - turn_val;
+		int left_motors = forward_val + turn_val;
+
+		frontLeft = left_motors;
+		middleLeft = left_motors;
+		backLeft = left_motors;
+		
+		frontRight = right_motors;
+		middleRight = right_motors;
+		backRight = right_motors;
+
+		
 	}
 		
 		
