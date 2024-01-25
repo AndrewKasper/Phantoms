@@ -75,7 +75,7 @@ void P_cataFire(){
 	cataGroup.move_velocity(65);
 }
 
-void driveforward(int rotations, int velocity) {
+void driveforward(double rotations, int velocity) {
 frontLeft.move_relative(rotations, velocity);
 backLeft.move_relative(rotations, velocity);
 middleLeft.move_relative(rotations, velocity);
@@ -84,7 +84,7 @@ backRight.move_relative(rotations, velocity);
 frontRight.move_relative(rotations, velocity);
 }
 
-void drivebackwards(int rotations, int velocity) {
+void drivebackwards(double rotations, int velocity) {
 frontLeft.move_relative(-rotations, -velocity);
 backLeft.move_relative(-rotations, -velocity);
 middleLeft.move_relative(-rotations, -velocity);
@@ -93,7 +93,7 @@ backRight.move_relative(-rotations, -velocity);
 frontRight.move_relative(-rotations, -velocity);
 }
 
-void turnleft(int rotations, int velocity) {
+void turnleft(double rotations, int velocity) {
 	frontLeft.move_relative(-rotations, -velocity);
 	backLeft.move_relative(-rotations, -velocity);
 	middleLeft.move_relative(-rotations, -velocity);
@@ -102,7 +102,7 @@ void turnleft(int rotations, int velocity) {
 	frontRight.move_relative(rotations, velocity);
 }
 
-void turnright(int rotations, int velocity) {
+void turnright(double rotations, int velocity) {
 	frontLeft.move_relative(rotations, velocity);
 	backLeft.move_relative(rotations, velocity);
 	middleLeft.move_relative(rotations, velocity);
@@ -136,13 +136,76 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
-	delay(1000);
-	// JUST PUSH CODE
 	
-	driveforward(1.2, 200);
-	delay(2000);
-	drivebackwards(0.5, 40);
-	delay(200);
+	
+	driveforward(1, 120);
+	delay(1000);
+	/*
+	turnright(0.1, 60);
+	delay(500);
+	driveforward(0.2, 100);
+	delay(500);
+	*/
+	SolenoidL.set_value(HIGH);
+	drivebackwards(1, 40);
+	delay(1100);
+	turnleft(0.8, 70);
+	delay(500);
+	SolenoidL.set_value(LOW);
+	//turnright(0.1, 70);
+	//delay(2000);
+	
+	//driveforward(0.3, 70);
+	//delay(1000);
+	//drivebackwards(0.2, 70);
+	//delay(1000);
+
+
+
+/*
+
+	
+	turnright(0.4, 50);
+	delay(500);
+	drivebackwards(0.4, 50);
+	delay(1000);
+	turnleft(0.4, 50);
+	delay(230);
+	drivebackwards(2, 70);
+	delay(1200);
+	SolenoidR.set_value(LOW);
+	turnright(0.5, 80);
+	
+
+
+
+	/*
+	turnleft(0.4, 50);
+	delay(1000);
+	driveforward(0.5, 70);
+	delay(1000);
+	turnleft(0.3, 50);
+	delay(1000);
+	SolenoidR.set_value(LOW);
+	turnleft(0.3, 50);
+	delay(1000);
+	*/
+	/*
+	turnright(1.4, 70);
+	delay(500);
+	driveforward(2, 70);
+	delay(500);
+	turnright(0.8, 70);
+	delay(500);
+	driveforward(1, 70);
+	delay(500);
+	SolenoidL.set_value(HIGH);
+	*/
+	
+
+
+	// JUST PUSH CODE
+
 	//SolenoidL.set_value(HIGH);
 	//drivebackwards(0.5, 40);
 	//delay(1500);
@@ -176,7 +239,7 @@ void autonomous() {
 	middleRight.move_velocity(-3);
 	backRight.move_velocity(-3);
 	frontRight.move_velocity(-3);
-*/
+
 	// END OF AUTONOMOUS SKILLS CODE
 
 /*
@@ -267,7 +330,7 @@ void rotationalCata() {
 			while ((rightCatapult.get_position() < motorP + fireM - grace) || (rightCatapult.get_position() > motorP + fireM + grace)){
 				delay(5);
 			}
-			delay(100);
+			delay(200);
 		}	
 	}
 }
